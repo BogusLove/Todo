@@ -1,24 +1,27 @@
-import mongoose from 'mongoose';
-import User from './models/user';
+const mongoose = require('mongoose');
+const User = require('./models/user');
 
 mongoose.connect('localhost:27017/todo');
 
 const controller = {
     UserContr: {
         getOne: async (userId) => {
-            const user = await User.findById(userId, (err, result) => {//????????????????????????
-                if (err) errorHandle(err);//????????????????????????
-                else return result;//????????????????????????
-            });
-            return user;
+            try {
+                const user = await User.findById(userId).exec();
+                return user;
+            } catch (err) {
+                return 'error while reading user `userId`';
+            }
+
         },
     
         getAll: async () => {
-            let users = await User.find((err, result) => {//????????????????????????
-                if (err) errorHandle(err);//????????????????????????
-                else return result;//????????????????????????
-            });
-            return users;
+            try {
+                const users = await User.find().exec();            
+                return users;
+            } catch (err){
+                return 'error while reading';
+            }
         },
     
         insert: (user) => {
@@ -29,6 +32,7 @@ const controller = {
             });
             newUser.save((err, result) => {
                 if (err) errorHandle(err);
+                console.log(result);
             });
         },
     
@@ -66,4 +70,4 @@ function errorHandle(err) {
     throw new Error(err);
 };
 
-export default controller;
+module.exports = controller;
