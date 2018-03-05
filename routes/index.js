@@ -4,12 +4,13 @@ const controller = require('../controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  controller.UserContr.insert({
+  const newUser = {
     login: 'BogusLove',
     password: '1234',
     admin: true
-  });
-  console.log(111111, controller.UserContr.getAll());
+  }; 
+  //controller.UserContr.insert(newUser);
+  console.log(111111, controller.UserContr.getAll());  
   res.render('index', { title: 'ToDo Manager' });
 });
 

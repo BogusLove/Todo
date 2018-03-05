@@ -4,6 +4,10 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const mongoDB = 'mongodb://localhost:27017/todo';
+mongoose.connect(mongoDB);
+mongoose.Promise = global.Promise;
 
 const index = require('./routes/index');
 const users = require('./routes/users');

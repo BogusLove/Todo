@@ -1,37 +1,38 @@
 const mongoose = require('mongoose');
 const User = require('./models/user');
 
-mongoose.connect('localhost:27017/todo');
-
 const controller = {
     UserContr: {
         getOne: async (userId) => {
-            try {
+            try {                
                 const user = await User.findById(userId).exec();
                 return user;
             } catch (err) {
                 return 'error while reading user `userId`';
             }
-
         },
     
         getAll: async () => {
             try {
-                const users = await User.find().exec();            
+                const users = await User.find().exec();
                 return users;
+                // return User.find().then((err, result) => {
+                //     if (err) errorHandle(err);
+                //     return result;
+                // })
             } catch (err){
                 return 'error while reading';
             }
         },
     
-        insert: (user) => {
+        insert: (user) => { 
             const newUser = new User({
                 login: user.login,
                 password: user.password,
                 admin: user.admin ? true : false
             });
             newUser.save((err, result) => {
-                if (err) errorHandle(err);
+                if (err) throw new Error(err);
                 console.log(result);
             });
         },
@@ -62,12 +63,22 @@ const controller = {
         remove: (userId) => {
             User.findByIdAndRemove(userId).exec();
         }
+    },
+    firstInsert: () => {
+        const newUser = new User({
+            login: 'Богуслав Барна',
+            password: '1234',
+            admin: true
+        });
+        newUser.save((err, result) => {
+            if (err) errorHandle(err);
+            else console.log('save', result);
+        });
+    },
+    errorHandle: function (err) {    
+        console.log(err);
+        throw new Error(err);
     }
-};
-
-function errorHandle(err) {    
-    console.log(err);
-    throw new Error(err);
 };
 
 module.exports = controller;
