@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const User = require('./models/user');
+const User = require('../models/user');
 
-
-const User = {
+const UserController = {
     getOne: async (userId) => {
         try {                
             const user = await User.findById(userId);
@@ -31,8 +30,7 @@ const User = {
         return newUser
                 .save()
                 .then(result => { return result })
-                .catch(err => { return err.message })
-            
+                .catch(err => { return err.message })            
     },
 
     update: (userID, newUser) => {
@@ -55,4 +53,4 @@ const User = {
     }
 };
 
-module.exports = User;
+module.exports = UserController;

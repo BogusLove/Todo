@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.Types.ObjectId;
 
 const schema = new Schema({
     task: {
@@ -16,8 +15,13 @@ const schema = new Schema({
         required: false
     },
     responsible: {
-        type: [{type: ObjectId, ref: 'User'}],
+        type: [{type: Schema.Types.ObjectId, ref: 'User'}],
         required: false
+    },
+    status: {
+        type: String,
+        enum: ['todo','pending', 'done'],
+        required: true
     }
 });
 
