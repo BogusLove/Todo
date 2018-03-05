@@ -5,79 +5,60 @@ const controller = {
     UserContr: {
         getOne: async (userId) => {
             try {                
-                const user = await User.findById(userId).exec();
+                const user = await User.findById(userId);
                 return user;
             } catch (err) {
-                return 'error while reading user `userId`';
+                return 'error while reading user with id = ' + userId;
             }
         },
     
         getAll: async () => {
             try {
-                const users = await User.find().exec();
+                let users = await User.find();
                 return users;
-                // return User.find().then((err, result) => {
-                //     if (err) errorHandle(err);
-                //     return result;
-                // })
             } catch (err){
-                return 'error while reading';
+                return 'error while reading all users';
             }
         },
     
-        insert: (user) => { 
+        insert: async (user) => {             
             const newUser = new User({
                 login: user.login,
                 password: user.password,
                 admin: user.admin ? true : false
             });
-            newUser.save((err, result) => {
-                if (err) throw new Error(err);
-                console.log(result);
-            });
+            return newUser
+                    .save()
+                    .then(result => { return result })
+                    .catch(err => { return err.message })
+               
         },
     
-        update: (user) => {
-            const is = User.find({
-                login: user.login,
-                password: user.password,
-                admin: user.admin
-            }, 
-            (err, result) => {
-                if (err) errorHandle(err);
-                if (result) return true;
-                else return false; 
-            });
-            if (!is) {
-                const upUser = new User({
-                    login: user.login,
-                    password: user.password,
-                    admin: user.admin ? true : false
-                });
-                upUser.save((err, result) => {
-                    if (err) errorHandle(err);
-                });
-            };        
+        update: (userID, user) => {
+            return User
+                .find({'_id': userID})                
+                .then((err, user) => {
+                    user = {
+                        login: user.login,
+                        password: user.password,
+                        admin: user.admin ? true : false
+                    }
+                    user.save((err, result) => {
+                        if (err) return err;
+                        return result;
+                    });
+                })   
+                .then(result => { return result })
+                .catch(err => { return err.message });
         },
     
         remove: (userId) => {
-            User.findByIdAndRemove(userId).exec();
+            return User
+                    .findByIdAndRemove(userId)
+                    .exec()
+                    .then(result => { return result })
+                    .catch(err => { return err.message });
         }
-    },
-    firstInsert: () => {
-        const newUser = new User({
-            login: 'Богуслав Барна',
-            password: '1234',
-            admin: true
-        });
-        newUser.save((err, result) => {
-            if (err) errorHandle(err);
-            else console.log('save', result);
-        });
-    },
-    errorHandle: function (err) {    
-        console.log(err);
-        throw new Error(err);
     }
 };
 

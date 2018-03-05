@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://localhost:27017/todo';
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB, require('./db_config'));
 mongoose.Promise = global.Promise;
 
 const index = require('./routes/index');
