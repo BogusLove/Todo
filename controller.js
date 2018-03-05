@@ -25,6 +25,7 @@ const controller = {
             const newUser = new User({
                 login: user.login,
                 password: user.password,
+                name: user.name,
                 admin: user.admin ? true : false
             });
             return newUser
@@ -34,20 +35,13 @@ const controller = {
                
         },
     
-        update: (userID, user) => {
+        update: (userID, newUser) => {
+            const options = {
+                new: true,
+                upsert: false
+            };
             return User
-                .find({'_id': userID})                
-                .then((err, user) => {
-                    user = {
-                        login: user.login,
-                        password: user.password,
-                        admin: user.admin ? true : false
-                    }
-                    user.save((err, result) => {
-                        if (err) return err;
-                        return result;
-                    });
-                })   
+                .findByIdAndUpdate({'_id': userID}, newUser, options)
                 .then(result => { return result })
                 .catch(err => { return err.message });
         },
