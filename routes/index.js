@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controller');
+const UserController = require('../controllers/user');
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {  
@@ -9,13 +9,13 @@ router.get('/', async function(req, res, next) {
   //   login: 'dsaa',
   //   password: '1234'
   // };
-  // let response = await controller.UserContr.insert(user);
+  // let response = await UserController.insert(user);
   // console.log(response);
   
-  // const users = await controller.UserContr.getAll();
+  // const users = await UserController.getAll();
   // console.log(users);
 
-  // response = await controller.UserContr.update("5a9d6157ab6a5c184b0e03fc", {
+  // response = await UserController.update("5a9d6157ab6a5c184b0e03fc", {
   //   login: '3432rew22',
   //   password: '1234',
   //   admin: false

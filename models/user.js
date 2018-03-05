@@ -12,8 +12,8 @@ const schema = new Schema({
         required: true
     },
     name: {
-        type: String, 
-        required: true
+        first: {type: String, required: true},
+        second: {type: String, required: true}        
     },
     admin: {
         type: Boolean, 
