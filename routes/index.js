@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/user');
 const TaskController = require('../controllers/task');
-const moment = require('moment');
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   let response = '';
@@ -22,16 +21,17 @@ router.get('/', async function(req, res, next) {
   //   password: '1234',
   //   admin: false
   // });
-
-  console.log(moment('2018-04-13 12:34').format('DD.MM.YYYY HH:mm'));
-  
+   
   let task = {
-    date: new Date(moment('2018-04-13 12:34').format('DD.MM.YYYY HH:mm'))
+    task: 'go to church',
+    date: new Date(2018, 3, 11),
+    responsible: ['5a9d8ed121fe7442cc18b171', '5a9d9b77eefd65496ef4a518'],
+    status: 'todo'
   };
   //response = TaskController.remove('');
   //response = await TaskController.insert(task);
-  response = await TaskController.update('5a9e4a760afdaf1a4d597503', task);  
-  response = await TaskController.getAll();
+  //response = await TaskController.update('5a9e8a932e0b3b0dc9b1f94a', task);  
+  //response = await TaskController.getOne('5a9e8a932e0b3b0dc9b1f94a');  
   res.send(response);
 });
 

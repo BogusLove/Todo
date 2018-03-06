@@ -15,6 +15,10 @@ const schema = new Schema({
         type: Date,
         required: false
     },
+    createDate: {
+        type: Date,
+        required: true
+    },
     responsible: {
         type: [{type: Schema.Types.ObjectId, ref: 'User'}],
         required: false
@@ -23,7 +27,7 @@ const schema = new Schema({
         type: String,
         enum: ['todo','pending', 'done'],
         required: true
-    }
+    }    
 });
 
 module.exports = mongoose.model('Task', schema);

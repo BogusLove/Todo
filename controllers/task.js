@@ -9,7 +9,7 @@ const TaskController = {
                 .findById(taskID)
                 .populate('responsible')
                 .then(result => {return result})
-                .catch(err => {return err});            
+                .catch(err => {return err});
             return task;
         } catch (err) {
             return err.message;
@@ -25,11 +25,12 @@ const TaskController = {
         }
     },
 
-    insert: async (task) => {             
+    insert: async (task) => {
         const newTask = new Task({
             task: task.task,
             description: task.description,
             date: task.date,
+            createDate: new Date(),
             responsible: task.responsible,
             status: task.status
         });
