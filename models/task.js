@@ -27,7 +27,12 @@ const schema = new Schema({
         type: String,
         enum: ['todo','pending', 'done'],
         required: true
-    }    
+    },
+    anonyumous: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 });
 
 module.exports = mongoose.model('Task', schema);

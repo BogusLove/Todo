@@ -32,7 +32,8 @@ const TaskController = {
             date: task.date,
             createDate: new Date(),
             responsible: task.responsible,
-            status: task.status
+            status: task.status,
+            anonyumous: task.anonyumous
         });
         return newTask
                 .save()
