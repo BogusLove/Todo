@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     task: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String,

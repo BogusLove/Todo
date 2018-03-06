@@ -61,3 +61,4 @@ typings/
 .next
 
 db_config.js
+date_config.js

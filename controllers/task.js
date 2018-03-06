@@ -52,7 +52,7 @@ const TaskController = {
     },
 
     remove: (taskID) => {
-        return User
+        return Task
                 .findByIdAndRemove(taskID)
                 .exec()
                 .then(result => { return result })
