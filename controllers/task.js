@@ -7,7 +7,17 @@ const TaskController = {
         try {                
             const task = await Task
                 .findById(taskID)
-                .populate('responsible')
+                // .populate({
+                //     path: 'groupID',
+                //     populate: {
+                //         path: 'members admins', 
+                //         select: 'name login'
+                //     }
+                // })
+                .populate({
+                    path: 'responsible',
+                    select: 'name login'
+                })
                 .then(result => {return result})
                 .catch(err => {return err});
             return task;
@@ -29,9 +39,9 @@ const TaskController = {
         const newTask = new Task({
             task: task.task,
             description: task.description,
-            date: task.date,
-            createDate: new Date(),
+            deadlineDate: task.deadlineDate,
             responsible: task.responsible,
+            groupID: task.groupID,
             status: task.status,
             anonyumous: task.anonyumous
         });
@@ -56,6 +66,14 @@ const TaskController = {
     remove: (taskID) => {
         return Task
                 .findByIdAndRemove(taskID)
+                .exec()
+                .then(result => { return result })
+                .catch(err => { return err.message });
+    },
+
+    removeAll: () => {
+        return Task
+                .remove({})
                 .exec()
                 .then(result => { return result })
                 .catch(err => { return err.message });

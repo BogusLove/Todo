@@ -11,9 +11,14 @@ const schema = new Schema({
         type: [{type: Schema.Types.ObjectId, ref: 'User'}],
         required: false
     },
-    admin: {
-        type: Schema.Types.ObjectId,
+    admins: {
+        type: [{type: Schema.Types.ObjectId, ref: 'User'}],
         required: true
+    },
+    createDate: {
+        type: Date,
+        required: true,
+        default: Date.now()
     }
 });
 
