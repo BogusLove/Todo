@@ -19,10 +19,10 @@ router.get('/', async function(req, res, next) {
   // });
    
   let task = {
-    task: 'Намалювати зайчика',
-    description: 'Має бути дуже гарно',
-    deadlineDate: new Date(2018, 3, 11),
-    responsible: ['5aa026ee454b4b14a0850ba9', '5aa02918ef9db516ee7f9ca7'],
+    task: 'Запросити музикантів',
+    description: 'Їм має бути зручно',
+    deadlineDate: new Date(2018, 6, 17),
+    responsible: ['5aa026ee454b4b14a0850ba9'],
     status: 'todo',
     anonyumous: false,
     groupID: '5aa0516eb777ae31437e2a31'
@@ -48,6 +48,9 @@ router.get('/', async function(req, res, next) {
   //response = await GroupController.getOne('5aa0516eb777ae31437e2a31');
   //response = await GroupController.getAll();
   //response = await GroupController.removeAll();
+
+  response = await GroupController.getAllGroupsForUser('5aa026ee454b4b14a0850ba9');
+ 
   res.send(response);
 });
 

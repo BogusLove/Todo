@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Task = require('../models/task');
 const UserController = require('../controllers/user');
 
@@ -74,6 +75,27 @@ const TaskController = {
     removeAll: () => {
         return Task
                 .remove({})
+                .exec()
+                .then(result => { return result })
+                .catch(err => { return err.message });
+    },
+
+    getAllTasksForUser: (userID) => {
+        return Task
+                .aggregate([
+                    {$unwind: '$responsible'},
+                    {$match: {'responsible': ObjectId(userID)}}
+                ])
+                .exec()
+                .then(result => { return result })
+                .catch(err => { return err.message });
+    },
+
+    getAllTasksForGroup: (groupID) => {
+        return Task
+                .aggregate([
+                    {$match: {'groupID': ObjectId(groupID)}}
+                ])
                 .exec()
                 .then(result => { return result })
                 .catch(err => { return err.message });

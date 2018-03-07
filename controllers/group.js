@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Group = require('../models/group');
+const ObjectId = mongoose.Types.ObjectId;
 
 const GroupController = {
     getOne: async (groupID) => {
@@ -62,6 +63,17 @@ const GroupController = {
     removeAll: () => {
         return Group
                 .remove({})
+                .exec()
+                .then(result => { return result })
+                .catch(err => { return err.message });
+    },
+
+    getAllGroupsForUser: (userID) => {
+        return Group
+                .aggregate([
+                    {$unwind: '$members'},
+                    {$match: {'members': ObjectId(userID)}}
+                ])
                 .exec()
                 .then(result => { return result })
                 .catch(err => { return err.message });

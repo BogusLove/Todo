@@ -50,7 +50,7 @@ const UserController = {
                 .exec()
                 .then(result => { return result })
                 .catch(err => { return err.message });
-    }
+    }    
 };
 
 module.exports = UserController;
