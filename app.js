@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const tasks = require('./routes/task');
 const users = require('./routes/users');
+const groups = require('./routes/group');
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://localhost:27017/todo';
 mongoose.connect(mongoDB, require('./db_config'));
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/tasks', tasks);
 app.use('/users', users);
+app.use('/groups', groups);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
