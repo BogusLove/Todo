@@ -9,7 +9,8 @@ const schema = new Schema({
     },
     password: {
         type: String, 
-        required: true
+        required: true,
+        minlength: 4
     },
     name: {
         first: {type: String, required: true},

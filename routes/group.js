@@ -37,3 +37,5 @@ Router
         let response = await GroupController.remove(req.params.id);
         res.json(response);
     });
+
+module.exports = Router;
