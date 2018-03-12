@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 
 const UserController = {
-    getOne: async (userId) => {
+    getOneByID: async (userId) => {
         try {                
             const user = await User.findById(userId);
             return user;
@@ -26,11 +26,20 @@ const UserController = {
             password: user.password,
             name: user.name,
             admin: user.admin ? true : false
-        });
+        });        
         return newUser
                 .save()
-                .then(result => { return result })
-                .catch(err => { return err.message })            
+                .then(result => { 
+                    return {
+                        user: result, 
+                        err: null }
+                    })
+                .catch(err => { 
+                    return {
+                        user: null, 
+                        err: err.message 
+                    }
+                })
     },
 
     update: (userID, newUser) => {

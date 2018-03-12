@@ -1,31 +1,56 @@
 const express = require('express');
 const Router = express.Router();
+const passport = require('passport');
 const UserController = require('../controllers/user');
 
 Router
-  .get('/', async (req, res) => {
-    let response = await UserController.getAll();
+  .get('/', (req, res) => {
+    res.json('Main user page');
+  })
+  .get('/signin', (req, res) => {
+    res.json('SignIn now');
+  })
+  .get('/signup', (req, res) => {
+    res.json('SignUp now');
+  })  
+  .get('/profile', async (req, res) => {    
+    let response = await UserController.getOneByID(req.session.passport.user);
     res.json(response);
   })
-  .get('/signin/:id', async (req, res) => {
-    let response = await UserController.getOne(req.params.id);
-    ///////////////session auth///////////////////////////////
-    res.json(response);
+  .get('/logout', isAuth, (req, res) => {
+    req.logOut();
+    res.redirect('/users');
   })
-  .post('/', async (req, res) => {
-    const newUser = {
-      login: req.body.login,
-      password: req.body.password,
-      name: {
-        first: req.body.first,
-        second: req.body.second
-      },
-      admin: req.body.admin ? true : false
-    };
-    let response = await UserController.insert(newUser);
-    //////////////session auth///////////////////////////////
-    res.json(response);
+  .post('/signin', passport.authenticate('local.signin', {
+    failureRedirect: '/users/signin',
+    failureFlash: true,
+    successFlash: 'Welcome!'
+  }), (req, res) => {
+    if(req.session.oldUrl) {
+      const oldUrl = req.session.oldUrl;
+      req.session.oldUrl = null;
+      res.redirect(oldUrl);
+    } 
+    else {
+        res.redirect('/users');
+    }
   })
+  .post('/signup', passport.authenticate('local.signup', 
+    {      
+      failureRedirect: '/users/signup',
+      failureFlash: true,
+      successFlash: 'Welcome!'
+    }), (req, res) => {
+      if(req.session.oldUrl) {
+        const oldUrl = req.session.oldUrl;
+        req.session.oldUrl = null;
+        res.redirect(oldUrl);
+      } 
+      else {
+          res.redirect('/users/profile');
+      }
+    }
+  )
   .put('/:id', async (req, res) => {
     const newUser = {
       login: req.body.login,
@@ -42,9 +67,10 @@ Router
   .delete('/:id', async (req, res) => {
     let response = await UserController.remove(req.params.id);
     res.json(response);
-  })
-  .get('/logout', (req, res) => {
-    /////////////////session logout////////////////////////////
-  })
+  });
+
+function isAuth(req, res, next) {
+  req.isAuthenticated() ? next() : res.redirect('/users/signin');
+}
 
 module.exports = Router;

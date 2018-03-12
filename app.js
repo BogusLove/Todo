@@ -4,6 +4,10 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const passport = require('passport');
+const flash = require('connect-flash');
 const tasks = require('./routes/task');
 const users = require('./routes/users');
 const groups = require('./routes/group');
@@ -13,7 +17,7 @@ mongoose.connect(mongoDB, require('./db_config'));
 mongoose.Promise = global.Promise;
 
 const app = express();
-
+require('./passport/local');
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'ejs');
@@ -24,7 +28,22 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  secret: 'grouptodomanagersecretkey',
+  resave: true,
+  saveUninitialized: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  cookie: { maxAge: 600000 }
+}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 //app.use(express.static(path.join(__dirname, 'public')));
+// app.use(function (req, res, next) {
+//   res.locals.login = req.isAuthenticated();
+//   res.locals.session = req.session;
+//   next();
+// });
 
 app.use('/tasks', tasks);
 app.use('/users', users);
@@ -45,7 +64,9 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({
+    err: err.message
+  });
 });
 
 module.exports = app;
