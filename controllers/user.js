@@ -5,18 +5,18 @@ const UserController = {
     getOneByID: async (userId) => {
         try {                
             const user = await User.findById(userId);
-            return user;
+            return { user: user };
         } catch (err) {
-            return 'error while reading user with id = ' + userId;
+            return { err: err };
         }
     },
 
     getAll: async () => {
         try {
             let users = await User.find();
-            return users;
+            return { users: users };
         } catch (err){
-            return 'error while reading all users';
+            return { err: err };
         }
     },
 
@@ -29,17 +29,8 @@ const UserController = {
         });        
         return newUser
                 .save()
-                .then(result => { 
-                    return {
-                        user: result, 
-                        err: null }
-                    })
-                .catch(err => { 
-                    return {
-                        user: null, 
-                        err: err.message 
-                    }
-                })
+                .then(user => { return { user: user } })
+                .catch(err => { return { err: err } })
     },
 
     update: (userID, newUser) => {
@@ -49,24 +40,24 @@ const UserController = {
         };
         return User
             .findByIdAndUpdate({'_id': userID}, newUser, options)
-            .then(result => { return result })
-            .catch(err => { return err.message });
+            .then(user => { return { user: user } })
+            .catch(err => { return { err: err } });
     },
 
     remove: (userId) => {
         return User
                 .findByIdAndRemove(userId)
                 .exec()
-                .then(result => { return result })
-                .catch(err => { return err.message });
+                .then(result => { return { result: result } })
+                .catch(err => { return { err: err } });
     },
 
     removeAll: () => {
         return User
                 .remove({})
                 .exec()
-                .then(result => { return result })
-                .catch(err => { return err.message });
+                .then(result => { return { result: result } })
+                .catch(err => { return { err: err } });
     }   
 };
 
