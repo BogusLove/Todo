@@ -1,2 +1,2 @@
 # Todo
-ToDo - rest server with mongoDB. 
+ToDo - REST-API with mongoDB for group task manager. 
