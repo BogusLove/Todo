@@ -23,6 +23,7 @@ Router
       admin: req.body.admin ? true : false
     };
     let response = await UserController.insert(newUser);
+    //////////////session auth///////////////////////////////
     res.json(response);
   })
   .put('/:id', async (req, res) => {
