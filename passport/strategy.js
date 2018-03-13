@@ -1,5 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const facebook_config = require('../facebook_config');
 const User = require('../models/user');
 const UserController = require('../controllers/user');
 
@@ -68,4 +70,36 @@ passport.use('local.signup', new LocalStrategy({
         };        
     });
     }
+));
+
+passport.use('facebook', new FacebookStrategy({
+    clientID: facebook_config.clientID,
+    clientSecret: facebook_config.clientSecret,
+    callbackURL: facebook_config.callbackURL
+  },
+  function(accessToken, refreshToken, profile, done) {
+    User.findOne({'facebook.id': profile.id}, async (err, user) => {
+        if (err) {
+            return done(err);
+        }
+        if (user) {
+            return done(null, user);
+        }
+        else {
+            const newUser = new User({
+                facebook: {
+                    id: profile.id,
+                    token: accessToken,
+                    email: profile.emails[0].value,
+                    name: {
+                        first: profile.name.givenName,
+                        second: profile.name.familyName
+                    }
+                }
+            });
+            let response = await UserController.insert(newUser);
+            response.err ? done(err) : done(null, response.user);
+        }
+    });
+  }
 ));

@@ -19,7 +19,31 @@ const schema = new Schema({
     admin: {
         type: Boolean, 
         required: false
-    } 
+    },
+    facebook: {
+        id: {
+            type: String,
+            required: true
+        },
+        token: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: false
+        },
+        name: {
+            first: {
+                type: String,
+                required: true
+            },
+            second: {
+                type: String,
+                required: true
+            }
+        }
+    }
 });
 
 module.exports = mongoose.model('User', schema);

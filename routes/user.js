@@ -13,6 +13,11 @@ Router
   .get('/signup', (req, res) => {
     res.json('SignUp now');
   })  
+  .get('/facebook', passport.authenticate('facebook', {scope: ['email']}))
+  .get('/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/users/profile', 
+    failureRedirect: '/users/signin'})
+  )
   .get('/profile', async (req, res) => {    
     let response = await UserController.getOneByID(req.session.passport.user);
     res.json(response);
@@ -23,8 +28,7 @@ Router
   })
   .post('/signin', passport.authenticate('local.signin', {
     failureRedirect: '/users/signin',
-    failureFlash: true,
-    successFlash: 'Welcome!'
+    failureFlash: true
   }), (req, res) => {
     if(req.session.oldUrl) {
       const oldUrl = req.session.oldUrl;
@@ -35,11 +39,9 @@ Router
         res.redirect('/users');
     }
   })
-  .post('/signup', passport.authenticate('local.signup', 
-    {      
+  .post('/signup', passport.authenticate('local.signup', {      
       failureRedirect: '/users/signup',
-      failureFlash: true,
-      successFlash: 'Welcome!'
+      failureFlash: true
     }), (req, res) => {
       if(req.session.oldUrl) {
         const oldUrl = req.session.oldUrl;

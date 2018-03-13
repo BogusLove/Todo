@@ -9,7 +9,7 @@ const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 const flash = require('connect-flash');
 const tasks = require('./routes/task');
-const users = require('./routes/users');
+const users = require('./routes/user');
 const groups = require('./routes/group');
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://localhost:27017/todo';
@@ -17,7 +17,7 @@ mongoose.connect(mongoDB, require('./db_config'));
 mongoose.Promise = global.Promise;
 
 const app = express();
-require('./passport/local');
+require('./passport/strategy');
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'ejs');
