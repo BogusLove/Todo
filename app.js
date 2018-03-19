@@ -13,6 +13,7 @@ const users = require('./routes/user');
 const groups = require('./routes/group');
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://localhost:27017/todo';
+const cors = require('cors');
 mongoose.connect(mongoDB, require('./db_config'));
 mongoose.Promise = global.Promise;
 
@@ -28,6 +29,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 app.use(session({
   secret: 'grouptodomanagersecretkey',
   resave: true,
