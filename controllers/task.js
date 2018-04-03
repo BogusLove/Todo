@@ -29,7 +29,14 @@ const TaskController = {
 
     getAll: async () => {
         try {
-            let tasks = await Task.find();
+            let tasks = await Task
+                .find()
+                .populate({
+                    path: 'responsible',
+                    select: 'name'
+                })
+                .then(result => {return result})
+                .catch(err => {return err});
             return tasks;
         } catch (err){
             return err.message;
