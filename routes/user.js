@@ -13,11 +13,11 @@ Router
   .get('/signup', (req, res) => {
     res.json('SignUp now');
   })  
-  .get('/facebook', passport.authenticate('facebook', {scope: ['email']}))
-  .get('/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: '/users/profile', 
-    failureRedirect: '/users/signin'})
-  )
+  // .get('/facebook', passport.authenticate('facebook', {scope: ['email']}))
+  // .get('/facebook/callback', passport.authenticate('facebook', {
+  //   successRedirect: '/users/profile', 
+  //   failureRedirect: '/users/signin'})
+  // )
   .get('/profile', async (req, res) => {    
     let response = await UserController.getOneByID(req.session.passport.user);
     res.json(response);
@@ -39,18 +39,20 @@ Router
         res.redirect('/users');
     }
   })
-  .post('/signup', passport.authenticate('local.signup', {      
-      failureRedirect: '/users/signup',
+  .post('/signup', passport.authenticate('local.signup', {
+      failureRedirect: 'http://localhost:3000/signup',
       failureFlash: true
     }), (req, res) => {
-      if(req.session.oldUrl) {
-        const oldUrl = req.session.oldUrl;
-        req.session.oldUrl = null;
-        res.redirect(oldUrl);
-      } 
-      else {
-          res.redirect('/users/profile');
-      }
+      console.log(res);
+      res.redirect('http://localhost:3000/');      
+      // if(req.session.oldUrl) {
+      //   const oldUrl = req.session.oldUrl;
+      //   req.session.oldUrl = null;
+      //   res.redirect(oldUrl);
+      // } 
+      // else {
+      //     res.redirect('http://localhost:3000/');
+      // }
     }
   )
   .put('/:id', async (req, res) => {
