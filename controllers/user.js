@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const User = require('../models/user');
+const mongoose = require('mongoose'),
+      User = require('../models/user');
 
-const UserController = {
+module.exports = {
     getOneByID: async (userId) => {
         try {                
             const user = await User.findById(userId);
@@ -60,5 +60,3 @@ const UserController = {
                 .catch(err => { return { err: err } });
     }   
 };
-
-module.exports = UserController;

@@ -1,45 +1,57 @@
-const express = require('express');
-const path = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-const passport = require('passport');
-const flash = require('connect-flash');
-const tasks = require('./routes/task');
-const users = require('./routes/user');
-const groups = require('./routes/group');
-const mongoose = require('mongoose');
-const mongoDB = 'mongodb://localhost:27017/todo';
-const cors = require('cors');
-mongoose.connect(mongoDB, require('./db_config'));
-mongoose.Promise = global.Promise;
+const express = require('express'),
+      path = require('path'),
+      favicon = require('serve-favicon'),
+      logger = require('morgan'),
+      cookieParser = require('cookie-parser'),
+      bodyParser = require('body-parser'),
+      session = require('express-session'),
+      MongoStore = require('connect-mongo')(session),
+      passport = require('passport'),
+      flash = require('connect-flash'),
+      tasks = require('./routes/task'),
+      users = require('./routes/user'),
+      groups = require('./routes/group'),
+      mongoose = require('mongoose'),
+      mongoDB = 'mongodb://localhost:27017/todo',
+      cors = require('cors');
 
-const app = express();
 require('./passport/strategy');
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'ejs');
+mongoose
+    .connect(mongoDB, require('./db_config'))
+    .Promise = global.Promise;
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(cors());
-app.use(session({
-  secret: 'grouptodomanagersecretkey',
-  resave: true,
-  saveUninitialized: true,
-  store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  cookie: { maxAge: 600000 }
-}));
-app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
+module.exports = express()
+    .use(logger('dev'))
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: false }))
+    .use(cookieParser())
+    .use(cors())
+    .use(session({
+      secret: 'grouptodomanagersecretkey',
+      resave: true,
+      saveUninitialized: true,
+      store: new MongoStore({ mongooseConnection: mongoose.connection }),
+      cookie: { maxAge: 600000 }
+    }))
+    .use(flash())
+    .use(passport.initialize())
+    .use(passport.session())
+    .use('/tasks', tasks)
+    .use('/users', users)
+    .use('/groups', groups)
+    .use(function(req, res, next) {
+      let err = new Error('Not Found');
+      err.status = 404;
+      next(err);
+    })
+    .use(function(err, req, res, next) {
+      res.locals.message = err.message;
+      res.locals.error = req.app.get('env') === 'development' ? err : {};
+      res.status(err.status || 500);
+      res.json({
+        err: err.message
+      });
+    })
 //app.use(express.static(path.join(__dirname, 'public')));
 // app.use(function (req, res, next) {
 //   res.locals.login = req.isAuthenticated();
@@ -47,28 +59,9 @@ app.use(passport.session());
 //   next();
 // });
 
-app.use('/tasks', tasks);
-app.use('/users', users);
-app.use('/groups', groups);
+// view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'ejs');
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.json({
-    err: err.message
-  });
-});
-
-module.exports = app;
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));

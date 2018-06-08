@@ -1,8 +1,8 @@
-const express = require('express');
-const Router = express.Router();
-const GroupController = require('../controllers/group');
+const express = require('express'),
+      Router = express.Router(),
+      GroupController = require('../controllers/group');
 
-Router
+module.exports = Router
     .get('/', async (req, res) => {
         let response = await GroupController.getAll();
         res.json(response);
@@ -37,5 +37,3 @@ Router
         let response = await GroupController.remove(req.params.id);
         res.json(response);
     });
-
-module.exports = Router;

@@ -1,10 +1,10 @@
-const express = require('express');
-const Router = express.Router();
-const UserController = require('../controllers/user');
-const TaskController = require('../controllers/task');
-const GroupController = require('../controllers/group');
+const express = require('express'),
+      Router = express.Router(),
+      UserController = require('../controllers/user'),
+      TaskController = require('../controllers/task'),
+      GroupController = require('../controllers/group');
 
-Router
+module.exports = Router
   .get('/', async (req, res) => {
     let response = await TaskController.getAll();
     res.json(response);
@@ -51,9 +51,6 @@ Router
     let response = await TaskController.remove(req.params.id);
     res.json(response);
   });
-
-
-module.exports = Router;
 
 // let response = '';
 // const user = {

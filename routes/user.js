@@ -1,9 +1,9 @@
-const express = require('express');
-const Router = express.Router();
-const passport = require('passport');
-const UserController = require('../controllers/user');
+const express = require('express'),
+      Router = express.Router(),
+      passport = require('passport'),
+      UserController = require('../controllers/user');
 
-Router
+module.exports = Router
   .get('/', (req, res) => {
     res.json('Main user page');
   })
@@ -13,11 +13,11 @@ Router
   .get('/signup', (req, res) => {
     res.json('SignUp now');
   })  
-  // .get('/facebook', passport.authenticate('facebook', {scope: ['email']}))
-  // .get('/facebook/callback', passport.authenticate('facebook', {
-  //   successRedirect: '/users/profile', 
-  //   failureRedirect: '/users/signin'})
-  // )
+  .get('/facebook', passport.authenticate('facebook', {scope: ['email']}))
+  .get('/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/users/profile', 
+    failureRedirect: '/users/signin'})
+  )
   .get('/profile', async (req, res) => {    
     let response = await UserController.getOneByID(req.session.passport.user);
     res.json(response);
@@ -44,15 +44,6 @@ Router
       failureFlash: true
     }), (req, res) => {
       console.log(res);
-      res.redirect('http://localhost:3000/');      
-      // if(req.session.oldUrl) {
-      //   const oldUrl = req.session.oldUrl;
-      //   req.session.oldUrl = null;
-      //   res.redirect(oldUrl);
-      // } 
-      // else {
-      //     res.redirect('http://localhost:3000/');
-      // }
     }
   )
   .put('/:id', async (req, res) => {
@@ -76,5 +67,3 @@ Router
 function isAuth(req, res, next) {
   req.isAuthenticated() ? next() : res.redirect('/users/signin');
 }
-
-module.exports = Router;

@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
-const Task = require('../models/task');
-const UserController = require('../controllers/user');
+const mongoose = require('mongoose'),
+      ObjectId = mongoose.Types.ObjectId,
+      Task = require('../models/task'),
+      UserController = require('../controllers/user');
 
-const TaskController = {
+module.exports = {
     getOne: async (taskID) => {
         try {                
             const task = await Task
@@ -108,5 +108,3 @@ const TaskController = {
                 .catch(err => { return err.message });
     }
 };
-
-module.exports = TaskController;

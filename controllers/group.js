@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const Group = require('../models/group');
-const ObjectId = mongoose.Types.ObjectId;
+const mongoose = require('mongoose'),
+      Group = require('../models/group'),
+      ObjectId = mongoose.Types.ObjectId;
 
-const GroupController = {
+module.exports = {
     getOne: async (groupID) => {
         try {                
             const group = await Group
@@ -79,5 +79,3 @@ const GroupController = {
                 .catch(err => { return err.message });
     }
 };
-
-module.exports = GroupController;
